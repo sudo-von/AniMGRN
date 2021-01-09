@@ -1,6 +1,6 @@
 version: "3.3"
 services:
-  # contenedor-a.
+  # Container A
   mongo:
     container_name: mongo
     image: mongo:latest
@@ -16,7 +16,7 @@ services:
       - ./contenedor-a/mongo-volume:/data/db
     ports:
       - '27017:27017'
-  # contenedor-b.
+  # Container B
   mongo-express:
     container_name: mongo-express
     image: mongo-express:latest
@@ -34,3 +34,15 @@ services:
       - 'mongo'
     depends_on:
       - 'mongo'
+  # Container E
+  rabbitmq:
+    container_name: rabbitmq
+    image: "rabbitmq:3-management"
+    env_file:
+      - '.env'
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - '5672:5672'
+      - '15672:15672'
