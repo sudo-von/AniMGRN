@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:dev": "webpack serve --config ./contenedor-f/webpack.dev.js --watch",
-    "build:prod": "webpack --config ./contenedor-f/webpack.prod.js",
+    "vue:serve": "webpack serve --config ./contenedor-f/vue/webpack.dev.js",
+    "react:build:dev": "webpack serve --config ./contenedor-f/react/webpack.dev.js --watch",
+    "react:build:prod": "webpack --config ./contenedor-f/react/webpack.prod.js",
     "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
@@ -27,21 +28,27 @@
   },
   "homepage": "https://github.com/sudo-von/AniMGRN#readme",
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.0.1",
+    "html-webpack-plugin": "^4.5.1",
+    "rimraf": "^3.0.2",
+    "vue": "^2.6.12",
+    "vue-loader": "^15.9.6",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.12",
+    "webpack": "^5.12.2",
+    "webpack-cli": "^4.3.1",
+    "webpack-dev-server": "^3.11.1",
     "@babel/cli": "^7.1.0",
-    "@babel/core": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "auto-changelog": "^2.2.1",
-    "babel-loader": "^8.0.2",
-    "css-loader": "^1.0.0",
     "husky": "^4.3.7",
     "react-hot-loader": "^4.13.0",
-    "style-loader": "^0.23.0",
-    "webpack": "^5.11.1",
-    "webpack-cli": "^4.3.0",
-    "webpack-dev-server": "^3.11.0"
+    "style-loader": "^0.23.0"
   },
   "dependencies": {
     "react": "^16.5.2",
