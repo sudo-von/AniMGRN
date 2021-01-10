@@ -6,7 +6,8 @@
   "scripts": {
     "vue:serve": "webpack serve --config ./contenedor-f/vue/webpack.dev.js",
     "react:build:dev": "webpack serve --config ./contenedor-f/react/webpack.dev.js --watch",
-    "react:build:prod": "webpack --config ./contenedor-f/react/webpack.prod.js"
+    "react:build:prod": "webpack --config ./contenedor-f/react/webpack.prod.js",
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
     "type": "git",
@@ -42,11 +43,20 @@
     "webpack-dev-server": "^3.11.1",
     "@babel/cli": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "auto-changelog": "^2.2.1",
+    "husky": "^4.3.7",
     "react-hot-loader": "^4.13.0",
     "style-loader": "^0.23.0"
   },
   "dependencies": {
     "react": "^16.5.2",
     "react-dom": "^16.5.2"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }

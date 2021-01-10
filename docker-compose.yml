@@ -1,0 +1,48 @@
+version: "3.3"
+services:
+  # Container A
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: always
+    env_file:
+      - '.env'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_INITDB_PORT: ${MONGO_PORT}
+    volumes:
+      - ./contenedor-a/mongo-volume:/data/db
+    ports:
+      - '27017:27017'
+  # Container B
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express:latest
+    restart: always
+    env_file:
+      - '.env'
+    ports:
+      - '8081:8081'
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_PASSWORD}
+    links:
+      - 'mongo'
+    depends_on:
+      - 'mongo'
+  # Container E
+  rabbitmq:
+    container_name: rabbitmq
+    image: "rabbitmq:3-management"
+    env_file:
+      - '.env'
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - '5672:5672'
+      - '15672:15672'
