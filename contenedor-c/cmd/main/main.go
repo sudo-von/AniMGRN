@@ -17,32 +17,31 @@ const (
 
 func main() {
 
+	fmt.Println("Trying to connect to MongoDB at:", url)
 	session, err := mongo.NewConnection(url, username, password)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Connected established to MongoDB at:", url)
+	fmt.Println("Connection established to MongoDB at:", url)
 
-	songs, err := http.FetchSongs()
+	songs := http.WebScrapper{URL: "https://vocadb.net/api/songs"}
+	fetchedSongs, err := songs.FetchSongs()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Fetched", len(songs.Items), "songs 🎵")
-	err = mongo.SaveSongs(session, songs)
+	err = mongo.SaveSongs(session, fetchedSongs)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Stored", len(songs.Items), "songs 🎵")
 
-	artists, err := http.FetchArtists()
+	artists := http.WebScrapper{URL: "https://vocadb.net/api/artists"}
+	fetchedArtists, err := artists.FetchArtists()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Fetched", len(artists.Items), "artists 🎤")
-	err = mongo.SaveArtists(session, artists)
+	err = mongo.SaveArtists(session, fetchedArtists)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Stored", len(artists.Items), "artists 🎤")
 
 }
