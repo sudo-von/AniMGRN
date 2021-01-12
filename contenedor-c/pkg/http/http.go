@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -9,9 +10,21 @@ import (
 	"github.com/AniMGRN/contenedor-c/pkg/mongo"
 )
 
-func FetchSongs() (*mongo.Playlist, error) {
+// ScrapperRepository interface.
+type ScrapperRepository interface {
+	FetchSongs() (*mongo.Playlist, error)
+	FetchArtists() (*mongo.Artists, error)
+}
+
+// WebScrapper struct.
+type WebScrapper struct {
+	URL string
+}
+
+// FetchSongs method.
+func (webScrapper *WebScrapper) FetchSongs() (*mongo.Playlist, error) {
 	playlist := &mongo.Playlist{}
-	response, err := http.Get("https://vocadb.net/api/songs")
+	response, err := http.Get(webScrapper.URL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,12 +39,14 @@ func FetchSongs() (*mongo.Playlist, error) {
 		log.Fatal(jsonErr)
 		return nil, jsonErr
 	}
+	fmt.Println("Fetched", len(playlist.Items), "songs 🎵")
 	return playlist, nil
 }
 
-func FetchArtists() (*mongo.Artists, error) {
+// FetchArtists method.
+func (webScrapper *WebScrapper) FetchArtists() (*mongo.Artists, error) {
 	artist := &mongo.Artists{}
-	response, err := http.Get("https://vocadb.net/api/artists")
+	response, err := http.Get(webScrapper.URL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,5 +61,6 @@ func FetchArtists() (*mongo.Artists, error) {
 		log.Fatal(jsonErr)
 		return nil, jsonErr
 	}
+	fmt.Println("Fetched", len(artist.Items), "artists 🎤")
 	return artist, nil
 }

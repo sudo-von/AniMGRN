@@ -1,6 +1,8 @@
 package mongo
 
 import (
+	"fmt"
+
 	mgo "gopkg.in/mgo.v2"
 )
 
@@ -30,5 +32,6 @@ func SaveArtists(session *mgo.Session, artists *Artists) error {
 			return err
 		}
 	}
+	fmt.Println("Stored", len(artists.Items), "artists 🎤")
 	return nil
 }
