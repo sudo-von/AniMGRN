@@ -17,19 +17,19 @@ const (
 
 func main() {
 
-	fmt.Println("Trying to connect to MongoDB at:", url)
-	session, err := mongo.NewConnection(url, username, password)
+	fmt.Println("[contenedor-c]: Trying to connect to MongoDB at:", url)
+	repository, err := mongo.NewConnection(url, username, password)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Connection established to MongoDB at:", url)
+	fmt.Println("[contenedor-c]: Connection established to MongoDB at:", url)
 
 	songs := http.WebScrapper{URL: "https://vocadb.net/api/songs"}
 	fetchedSongs, err := songs.FetchSongs()
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = mongo.SaveSongs(session, fetchedSongs)
+	err = repository.SaveSongs(fetchedSongs)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -39,7 +39,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = mongo.SaveArtists(session, fetchedArtists)
+	err = repository.SaveArtists(fetchedArtists)
 	if err != nil {
 		log.Fatal(err)
 	}

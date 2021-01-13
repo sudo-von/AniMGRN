@@ -39,7 +39,7 @@ func (webScrapper *WebScrapper) FetchSongs() (*mongo.Playlist, error) {
 		log.Fatal(jsonErr)
 		return nil, jsonErr
 	}
-	fmt.Println("Fetched", len(playlist.Items), "songs 🎵")
+	fmt.Println("[contenedor-c]: Fetched", len(playlist.Items), "songs 🎵")
 	return playlist, nil
 }
 
@@ -61,6 +61,6 @@ func (webScrapper *WebScrapper) FetchArtists() (*mongo.Artists, error) {
 		log.Fatal(jsonErr)
 		return nil, jsonErr
 	}
-	fmt.Println("Fetched", len(artist.Items), "artists 🎤")
+	fmt.Println("[contenedor-c]: Fetched", len(artist.Items), "artists 🎤")
 	return artist, nil
 }
