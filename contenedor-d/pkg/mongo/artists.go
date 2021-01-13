@@ -1,10 +1,6 @@
 package mongo
 
-import (
-	"fmt"
-
-	mgo "gopkg.in/mgo.v2"
-)
+import "gopkg.in/mgo.v2/bson"
 
 // Artists struct.
 type Artists struct {
@@ -13,25 +9,24 @@ type Artists struct {
 
 // Artist struct.
 type Artist struct {
-	ArtistType          string `json:"artistType" bson:"artist_type"`
-	CreateDate          string `json:"createDate" bson:"create_date"`
-	DefaultName         string `json:"defaultName" bson:"default_name"`
-	DefaultNameLanguage string `json:"defaultNameLanguage" bson:"default_name_language"`
-	Name                string `json:"name" bson:"name"`
-	PictureMime         string `json:"pictureMime" bson:"picture_mime"`
-	Status              string `json:"status" bson:"status"`
-	Version             int    `json:"version" bson:"version"`
+	ID                  bson.ObjectId `json:"_id" bson:"_id"`
+	ArtistType          string        `json:"artistType" bson:"artist_type"`
+	CreateDate          string        `json:"createDate" bson:"create_date"`
+	DefaultName         string        `json:"defaultName" bson:"default_name"`
+	DefaultNameLanguage string        `json:"defaultNameLanguage" bson:"default_name_language"`
+	Name                string        `json:"name" bson:"name"`
+	PictureMime         string        `json:"pictureMime" bson:"picture_mime"`
+	Status              string        `json:"status" bson:"status"`
+	Version             int           `json:"version" bson:"version"`
 }
 
-// SaveArtists stores playlist items in a collection.
-func SaveArtists(session *mgo.Session, artists *Artists) error {
-	connection := session.DB("animgrn").C("artists")
-	for _, song := range artists.Items {
-		err := connection.Insert(song)
-		if err != nil {
-			return err
-		}
+// FetchArtists method.
+func (r *Repository) FetchArtists() (*[]Artist, error) {
+	artists := &[]Artist{}
+	connection := r.Session.DB("animgrn").C("songs")
+	err := connection.Find(nil).All(artists)
+	if err != nil {
+		return nil, err
 	}
-	fmt.Println("Stored", len(artists.Items), "artists 🎤")
-	return nil
+	return artists, nil
 }

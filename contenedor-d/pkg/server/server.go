@@ -2,8 +2,10 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
+	"github.com/AniMGRN/contenedor-d/pkg/mongo"
 	"github.com/gorilla/mux"
 )
 
@@ -13,34 +15,39 @@ type Server interface {
 }
 
 type api struct {
-	router http.Handler
+	router     http.Handler
+	repository *mongo.Repository
 }
 
-func New() Server {
-	api := &api{}
-	r := mux.NewRouter()
-	r.HandleFunc("/songs", api.fetchSongs).Methods(http.MethodGet)
-	r.HandleFunc("/artists", api.fetchArtists).Methods(http.MethodGet)
-	api.router = r
-	return api
+func New(repo *mongo.Repository) Server {
+	a := &api{repository: repo}
+	router := mux.NewRouter()
+	router.HandleFunc("/songs", a.fetchSongs).Methods(http.MethodGet)
+	router.HandleFunc("/artists", a.fetchArtists).Methods(http.MethodGet)
+	a.router = router
+	return a
 }
 
 func (a *api) fetchSongs(w http.ResponseWriter, r *http.Request) {
-	gophers, _ := a.repository.FetchGophers()
+	data, err := a.repository.FetchSongs()
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode("Internal error")
+	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(gophers)
+	json.NewEncoder(w).Encode(data)
 }
 
 func (a *api) fetchArtists(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	gopher, err := a.repository.FetchGopherByID(vars["ID"])
-	w.Header().Set("Content-Type", "application/json")
+	data, err := a.repository.FetchArtists()
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound) // We use not found for simplicity
-		json.NewEncoder(w).Encode("Gopher Not found")
-		return
+		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode("Internal error")
 	}
-	json.NewEncoder(w).Encode(gopher)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(data)
 }
 
 func (a *api) Router() http.Handler {
