@@ -2,8 +2,6 @@ package mongo
 
 import (
 	"fmt"
-
-	mgo "gopkg.in/mgo.v2"
 )
 
 // Playlist struct.
@@ -29,14 +27,14 @@ type Song struct {
 }
 
 // SaveSongs stores playlist items in a collection.
-func SaveSongs(session *mgo.Session, playlist *Playlist) error {
-	connection := session.DB("animgrn").C("songs")
+func (r *Repository) SaveSongs(playlist *Playlist) error {
+	connection := r.Session.DB("animgrn").C("songs")
 	for _, song := range playlist.Items {
 		err := connection.Insert(song)
 		if err != nil {
 			return err
 		}
 	}
-	fmt.Println("Stored", len(playlist.Items), "songs 🎵")
+	fmt.Println("[contenedor-c]: Stored", len(playlist.Items), "songs 🎵")
 	return nil
 }
